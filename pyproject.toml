@@ -1,0 +1,31 @@
+[build-system] # https://python-poetry.org/docs/pyproject/#poetry-and-pep-517
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry] # https://python-poetry.org/docs/pyproject/
+name = "satellite-tracker"
+version = "0.1.0"
+description = "Electronics project for pointing to any satellite or planet, whether it is visible or below the horizon"
+authors = []
+readme = "README.md"
+packages = [
+    {include = "pointing", from = "pointing"},
+    {include = "tracking", from = "tracking"},
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pointing = { path = "pointing", develop = true }
+tracking = { path = "tracking", develop = true }
+rich = "^13.3.5"
+
+[tool.poetry.group.dev.dependencies]
+poethepoet = "^0.20.0"
+
+
+[tool.poe.tasks] # https://github.com/nat-n/poethepoet
+build-pointer = {shell = "docker build --tag pointer --target runtime pointing", help = "Build the pointer docker image."}
+deploy-pointer = {shell = "docker run --rm --name pointer pointer", help = "Deploy the pointer docker image."}
+run-pointer = {script = "pointing.main:point", help = "Run the pointer locally. [WORK IN PROGRESS]"}
+run = {script = "main:main", help = "Run the main program."}

@@ -1,35 +1,42 @@
-import argparse
 import requests
 import json
+import logging
+import os
 from time import time, sleep
 from datetime import datetime
 
-from secrets import api_key
+N2YO_API_KEY = os.environ.get('N2YO_API_KEY', None)
+
+logger = logging.getLogger(__name__)
 
 # TODO add docstrings
 
 
 def call_api(sat, lat, lon, alt, count, verbose=False):
     sec = min(count, 300)  # as set by N2YO api
-    response = requests.get(f"https://api.n2yo.com/rest/v1/satellite/positions/{sat}/{lat}/{lon}/{alt}/{sec}/&apiKey={api_key}")
+    response = requests.get(f"https://api.n2yo.com/rest/v1/satellite/positions/{sat}/{lat}/{lon}/{alt}/{sec}/&apiKey={N2YO_API_KEY}")
+    response.raise_for_status()
     data = response.json()
+    if data.get("error", False):
+        raise ValueError(f"API ERROR: {data['error']}")
     if verbose > 1:
-        print(f"API RESPONSE at t={int(time())} (#{data['info']['transactionscount']}) with {len(data['positions'])} positions - params : /{sat}/{lat}/{lon}/{alt}/{sec} ")
+        logger.debug(f"API RESPONSE at t={int(time())} (#{data['info']['transactionscount']}) with {len(data['positions'])} positions - params : /{sat}/{lat}/{lon}/{alt}/{sec} ")
     return data
 
 
 def retrieve_logfile(filename):
     with open(filename) as f:
         trace = json.loads(f.read())
-        print(trace)
     return trace
 
 
 def get_data(testing, **kwargs):
     if testing:
-        return retrieve_logfile("testing_trace.json")  # TODO take log file as parameter
+        data = retrieve_logfile("testing_trace.json")  # TODO take log file as parameter
     else:
-        return call_api(**kwargs)
+        data = call_api(**kwargs)
+    logger.debug(f"{data=}")
+    return data
 
 
 def get_test_data(verbose=False):
@@ -56,16 +63,16 @@ def get_cardinal_direction(azimuth):
         return 'S'
     if 225.0 < azimuth < 315.0:
         return 'W'
-    
+
     return 'N'
-    
+
 
 def log_tracking(position, sat_name=None, sat_id=None, **kwargs):
     timestamp, lat, lon, alt, azimuth, elevation, eclipsed = position.get('timestamp', '???'), position.get('satlatitude', '???'), position.get('satlongitude', '???'), position.get('sataltitude', '???'), position.get('azimuth', '???'), position.get('elevation', '???'), position.get('eclipsed', '???')
     eclipsed_str = "eclipsed" if eclipsed else "in daylight"
     time = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S") if isinstance(timestamp, int) else timestamp
 
-    print(f"{time} - {sat_name} (id:{sat_id}) is at " +
+    logger.info(f"{time} - {sat_name} (id:{sat_id}) is at " +
             f"lat:{lat:{'7.2f' if isinstance(lat, float) else ''}} " +
             f"lon:{lon:{'7.2f' if isinstance(lon, float) else ''}} " +
             f"alt:{alt:>{'7.2f' if isinstance(alt, float) else ''}}. " +
@@ -83,7 +90,7 @@ def list_of_dict_with_timestamps_to_dict(a: list) -> dict:
     return d
 
 
-def main(sat, lat, lon, alt, duration=1, interval=1, track=log_tracking, testing=False, verbose=False):
+def start_pointing(sat, lat, lon, alt, duration=1, interval=1, track=log_tracking, testing=False, verbose=False):
     # Get first batch of info
     if testing>1:
         data, duration, interval = get_test_data(verbose=verbose)
@@ -96,7 +103,10 @@ def main(sat, lat, lon, alt, duration=1, interval=1, track=log_tracking, testing
 
     try:
         while duration > 0:
-            now = int(time())  # TODO correct all now computations for when testing is True : timestamp do not match anymore
+            if testing:
+                now = positions_cache['min']
+            else:
+                now = int(time())
 
             # Update cache if positions are outdated
             if positions_cache['max'] < now:
@@ -106,7 +116,7 @@ def main(sat, lat, lon, alt, duration=1, interval=1, track=log_tracking, testing
             if positions_cache['min'] > now:
                 sleep(positions_cache['min'] - now)
                 now = positions_cache['min']
-            
+
             # Tracking callback
             track(sat_name=info['satname'], sat_id=info['satid'], position=positions_cache[now])
 
@@ -114,31 +124,8 @@ def main(sat, lat, lon, alt, duration=1, interval=1, track=log_tracking, testing
             if duration > 0:
                 sleep(interval)
     except KeyboardInterrupt:
-        print("KeyboardInterrupt", end=' - ')
-    if verbose > 1:
-        print("Tracking completed")
+        logger.warning("KeyboardInterrupt")
+    finally:
+        if verbose > 1:
+            logger.info("Tracking completed")
 
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Track a satellite's position with respect to an observer location.")
-    parser.add_argument('-s', '--sat', action='store', default=25544, type=int, help="NORAD id of satellite to track") # 25544 corresponds to ISS
-    parser.add_argument('-l', '--lat', action='store', default=.0, type=float, help="Observer's latitide (decimal degrees format)")
-    parser.add_argument('-L', '--lon', action='store', default=.0, type=float, help="Observer's longitude (decimal degrees format)")
-    parser.add_argument('-a', '--alt', action='store', default=.0, type=float, help="Observer's altitude above sea level in meters")
-    parser.add_argument('-d', '--duration', action='store', default=1, type=int, help="Duration of the tracking in seconds. -1 for indefinite")
-    parser.add_argument('-i', '--interval', action='store', default=1., type=float, help="Interval between two track callbacks. Accurate to the second")
-    parser.add_argument('-v', '--verbose', action='count', default=0, help="Increase output verbosity")
-
-    # TODO bypass api for testing pointer -- TODO adapt timestamp utilization (see now computation)
-    parser.add_argument('-t', '--testing', action='count', default=0, help="TODO")
-
-    args = parser.parse_args()
-    args.duration = args.duration if args.duration != -1 else float('inf')
-
-    return args
-
-
-if __name__ == '__main__':
-
-    args = parse_args()
-    main(args.sat, args.lat, args.lon, args.alt, duration=args.duration, interval=args.interval, testing=args.testing, verbose=args.verbose)
