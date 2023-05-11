@@ -1,4 +1,9 @@
-[tool.poetry]
+[build-system] # https://python-poetry.org/docs/pyproject/#poetry-and-pep-517
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry] # https://python-poetry.org/docs/pyproject/
 name = "tracking"
 version = "0.1.0"
 description = "Application to make a mechanical arm point in a given direction."
@@ -7,11 +12,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+lgpio = "^0.0.0.2"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"
 
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.pytest.ini_options] # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
+addopts = "--color=yes --doctest-modules --failed-first --strict-config --strict-markers --verbosity=2"
+xfail_strict = true
