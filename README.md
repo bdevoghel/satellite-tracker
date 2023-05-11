@@ -42,6 +42,16 @@ poetry poe run --duration 5 --verbose
 Arguments are optional, these are for demonstration purposes.
 The above command will run the tracker for 5 seconds, and print the results to the console.
 
+## Testing
+
+Tests are run with [pytest](https://docs.pytest.org/).
+
+Run all tests with following command:
+
+```bash
+poetry poe test
+```
+
 ## Note on project scope
 
 This project is, in addition to performing it's [main task](#satellite-orbit-tracker), a playground for learning and experimenting with different technologies and techniques. To this end, several features are implemented with a variable degree of usefulness and pertinence to the main task. Techniques and technologies will be listed here:

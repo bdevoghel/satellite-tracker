@@ -23,9 +23,23 @@ rich = "^13.3.5"
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.20.0"
 
+[tool.poetry.group.test.dependencies]
+pytest = "^7.3.1"
+
 
 [tool.poe.tasks] # https://github.com/nat-n/poethepoet
 build-pointer = {shell = "docker build --tag pointer --target runtime pointing", help = "Build the pointer docker image."}
 deploy-pointer = {shell = "docker run --rm --name pointer pointer", help = "Deploy the pointer docker image."}
 run-pointer = {script = "pointing.main:point", help = "Run the pointer locally. [WORK IN PROGRESS]"}
-run = {script = "main:main", help = "Run the main program."}
+
+[tool.poe.tasks.run]
+help = "Run the main program."
+script = "main:main"
+
+[tool.poe.tasks.test]
+help = "Run the tests for all modules."
+sequence = [
+    "pytest pointing",
+    "pytest tracking",
+]
+default_item_type = "shell"

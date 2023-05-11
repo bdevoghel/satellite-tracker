@@ -1,4 +1,9 @@
-[tool.poetry]
+[build-system] # https://python-poetry.org/docs/pyproject/#poetry-and-pep-517
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry] # https://python-poetry.org/docs/pyproject/
 name = "pointing"
 version = "0.1.0"
 description = "Application for computing the pointing angles to a satellite."
@@ -15,6 +20,6 @@ requests = "^2.30.0"
 pytest = "^7.3.1"
 
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.pytest.ini_options] # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
+addopts = "--color=yes --doctest-modules --failed-first --strict-config --strict-markers --verbosity=2"
+xfail_strict = false
