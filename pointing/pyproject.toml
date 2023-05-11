@@ -18,8 +18,9 @@ requests = "^2.30.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"
+pytest-cov = "^4.0.0"
 
 
 [tool.pytest.ini_options] # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
-addopts = "--color=yes --doctest-modules --failed-first --strict-config --strict-markers --verbosity=2"
+addopts = "--color=yes --doctest-modules --failed-first --strict-config --strict-markers --cov-report term-missing --cov pointing/pointing --verbosity=2"
 xfail_strict = false
