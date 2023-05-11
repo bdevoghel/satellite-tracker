@@ -6,7 +6,6 @@ Project for running a pointer that is able to track any satellite in orbit, or a
 
 See side-note on [project scope](#note-on-project-scope).
 
-
 ## Setup
 
 We use [poetry](https://python-poetry.org/docs/) as dependency management tool.
@@ -65,7 +64,7 @@ This project is, in addition to performing it's [main task](#satellite-orbit-tra
     - [x] [poethepoet](https://poethepoet.natn.io/) as task runner
 - testing
     - [x] [pytest](https://docs.pytest.org/) as testing framework
-    - [ ] [pytest-cov](https://pytest-cov.readthedocs.io/en/latest/) as coverage plugin
+    - [x] [pytest-cov](https://pytest-cov.readthedocs.io/en/latest/) as coverage plugin
 - linting and formatting
     - [ ] [black](https://black.readthedocs.io/en/stable/) as code formatter
     - [ ] [ruff](https://github.com/charliermarsh/ruff) as linting tool
