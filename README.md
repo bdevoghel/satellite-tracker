@@ -59,6 +59,7 @@ This project is, in addition to performing it's [main task](#satellite-orbit-tra
 
 - development and version control
     - [x] [git](https://git-scm.com/) as version control system
+    - [x] [pre-commit](https://pre-commit.com/) as git hook manager, with `poetry run pre-commit run --all-files` (first time might take a while for installing the hooks)
     - [ ] [commitizen](https://commitizen-tools.github.io/commitizen/) and [conventional-commit](https://www.conventionalcommits.org/) as commit message formatter
     - [ ] [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) as development environment
 - dependency management and task running
@@ -78,7 +79,6 @@ This project is, in addition to performing it's [main task](#satellite-orbit-tra
 
 Things I would like to implement in the future (in no particular order):
 
-- [ ] [pre-commit](https://pre-commit.com/) as git hook manager
 - [ ] CI pipeline (GitHub or GitLab)
 - [ ] postgresql database for state storage, interaction with sqlalchemy
 - [ ] geospatial (temporal ?) integration (postgis, geopandas, geoalchemy, ...)
