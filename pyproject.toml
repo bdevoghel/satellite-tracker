@@ -22,9 +22,20 @@ rich = "^13.3.5"
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.20.0"
+ruff = "^0.0.265"
+black = "^23.3.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"
+
+[tool.ruff] # https://github.com/charliermarsh/ruff
+fix = true
+show-fixes = true
+ignore-init-module-imports = true
+select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "G", "I", "INP", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
+# ignore = ["E501", "PGH001", "RET504", "S101"]
+pydocstyle = {convention = "google"}
+mccabe = {max-complexity = 14}
 
 
 [tool.poe.tasks] # https://github.com/nat-n/poethepoet

@@ -1,5 +1,7 @@
 # Satellite Orbit Tracker
 
+![black](https://img.shields.io/badge/code%20style-black-black)
+
 > "Inspiration is everywhere, you just need to know where to look at."
 
 Project for running a pointer that is able to track any satellite in orbit, or any object, anywhere, for that matter.
@@ -66,8 +68,8 @@ This project is, in addition to performing it's [main task](#satellite-orbit-tra
     - [x] [pytest](https://docs.pytest.org/) as testing framework
     - [x] [pytest-cov](https://pytest-cov.readthedocs.io/en/latest/) as coverage plugin
 - linting and formatting
-    - [ ] [black](https://black.readthedocs.io/en/stable/) as code formatter
-    - [ ] [ruff](https://github.com/charliermarsh/ruff) as linting tool
+    - [x] [black](https://black.readthedocs.io/en/stable/) as code formatter, with `poetry run black .`
+    - [x] [ruff](https://github.com/charliermarsh/ruff) as linting tool, with `poetry run ruff .`
 - containerization
     - [x] [docker](https://docs.docker.com/) as containerization tool
     - [ ] [docker-compose](https://docs.docker.com/compose/) as orchestration tool
