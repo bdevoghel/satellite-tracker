@@ -24,6 +24,16 @@ Add the following variables to the environment :
 
 - `N2YO_API_KEY` : api key for [N2YO api](https://www.n2yo.com/api/)
 
+### Development
+
+Several tools, such as linting and formatting, are used to help develop qualitative code.
+
+We use [pre-commit hooks](https://pre-commit.com/) to check if the development follows the project's standards. Please install the git hooks with the following command:
+
+```bash
+poetry run pre-commit install
+```
+
 ## Usage
 
 We use [poethepoet](https://poethepoet.natn.io/) for running the project and other tasks.

@@ -34,7 +34,7 @@ fix = true
 show-fixes = true
 ignore-init-module-imports = true
 select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "G", "I", "INP", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
-# ignore = ["E501", "PGH001", "RET504", "S101"]
+ignore = ["E501", "PGH001", "RET504", "S101", "S113", "D100", "D101", "D102", "D103", "D104", "D107", "PLR0913", "PLR2004", "G003", "G004", "DTZ006", "ISC003", "F401", "PTH123", "SIM108"]
 pydocstyle = {convention = "google"}
 mccabe = {max-complexity = 14}
 
